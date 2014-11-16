@@ -10,6 +10,8 @@
 #include <arpa/inet.h> // inet_pton()
 #include <errno.h>
 
+#include <openssl/bn.h>
+
 #define SERVER "149.154.167.40" // telegram test-server ip
 #define PORT 443 // port
 
@@ -19,6 +21,7 @@ using std::endl;
 // немного спиздил у чмыря
 bool connect(const char *host, int port)
 {
+    struct connection *c;
     int fd = socket (AF_INET, SOCK_STREAM, 0);
     if (fd == -1)
         return 0;
@@ -40,13 +43,41 @@ bool connect(const char *host, int port)
     }
 
 
-    char *buffer = "netinet";
+    short int mass[] = {
+        0x2d,
+        0x84,
+        0xd5,
+        0xf5,
+        0x1c,
+        0xb5,
+        0xc4,
+        0x15, 
+        0x3, 
+        0x2,
+        0x3,
+        0x4
+    };
+
+    char *buffer = new char[52];
+
+    for (int i = 0; i<12; i++)
+    {
+        buffer[i] = (char)mass[i];
+        cout<<buffer[i];
+    }
+
     cout<<strlen(buffer)<<endl;
+    cout<<buffer<<endl;
 
 
     int n = write(fd,buffer,strlen(buffer));
     cout<<buffer<<" "<<endl;
     cout<<read(fd,buffer,strlen(buffer))<<endl;
+
+    for (int i = 0; i<12; i++)
+    {
+        cout<<buffer[i];
+    }
 
     return 1;
 }
