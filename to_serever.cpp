@@ -2,6 +2,7 @@
 // включаем файлы, необходимые для tcp и сокетов
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -13,7 +14,7 @@
 #include <openssl/bn.h>
 
 #define SERVER "149.154.167.40" // telegram test-server ip
-#define PORT 443 // port
+#define PORT 80 // port
 
 using std::cout;
 using std::endl;
@@ -37,42 +38,32 @@ bool connect(const char *host, int port)
     {
         if (errno != EINPROGRESS)
         {
-            close (fd);
             return 0;
         }
     }
 
 
-    short int mass[] = {
-        0x2d,
-        0x84,
-        0xd5,
-        0xf5,
-        0x1c,
-        0xb5,
-        0xc4,
-        0x15, 
-        0x3, 
-        0x2,
-        0x3,
-        0x4
-    };
+    char *query = "7E 21 45 00 00 4B 57 49 40 00 FA 06 85 77 C7 B6 78 0E CE D6 95 50 00 6E 04 9F 74 5B EE A2 59 9A 00 0E 50 18 24 00 E3 2A 00 00 2B 4F 4B 20 50 61 73 73 77 6F 72 64 20 72 65 71 75 69 72 65 64 20 66 6F 72 20 61 6C 65 78 75 72 2E 0D 0A 67 B2 7E";
 
-    char *buffer = new char[52];
+    // for (int i = 0; i<sizeof(mass)/sizeof(uint16_t); i++)
+    // {
+    //     mass[i] = htons(mass[i]);
+    //     cout<<std::hex<<mass[i]<<endl;
+    // }
 
-    for (int i = 0; i<12; i++)
-    {
-        buffer[i] = (char)mass[i];
-        cout<<buffer[i];
-    }
+    char buffer[256];
+
+    bzero(buffer, 256);
 
     cout<<strlen(buffer)<<endl;
     cout<<buffer<<endl;
 
 
-    int n = write(fd,buffer,strlen(buffer));
+    int n = write(fd,query, sizeof(query));
+    cout<<"n is "<<n<<endl;
     cout<<buffer<<" "<<endl;
     cout<<read(fd,buffer,strlen(buffer))<<endl;
+    cout<<buffer<<endl;
 
     for (int i = 0; i<12; i++)
     {
@@ -84,7 +75,7 @@ bool connect(const char *host, int port)
 
 int main(int argc, char *argv[])
 {
-    cout << connect(SERVER, PORT)<<endl;
+    cout << connect(SERVER, PORT)<<"  "<<sizeof(uint32_t(100))<<endl;
 
     return 0;
 }
