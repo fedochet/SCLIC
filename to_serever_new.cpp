@@ -14,7 +14,7 @@
 #include <openssl/bn.h>
 
 #define SERVER "149.154.167.40" // telegram test-server ip
-#define PORT 80 // port
+#define PORT 443 // port
 
 using std::cout;
 using std::endl;
@@ -114,6 +114,15 @@ unsigned long crc32( unsigned long   crc,
    return(crc);
    }
 
+struct packet
+{
+    int size;
+    uint8_t *message;
+    void get(int &fd){
+
+    }
+};
+
 unsigned char * to_lendian(const unsigned char *arr, size_t len)
 {
     unsigned char * result = new unsigned char[len];
@@ -123,6 +132,8 @@ unsigned char * to_lendian(const unsigned char *arr, size_t len)
     }
     return result;
 }
+
+
 // немного спиздил у чмыря
 bool connect(const char *host, int port)
 {
@@ -146,33 +157,46 @@ bool connect(const char *host, int port)
         }
     }
 
+    //valid
+    unsigned char buffer[52] = {
+        0x34, 0x00,0x00,0x00,
+        0x00, 0x00,0x00,0x00,
+        0x00, 0x00,0x00,0x00,
+        0x00, 0x00,0x00,0x00,
+        0x00, 0x00,0x00,0x00,
+        0xB1,0xCC,0xE9,0x51,
+        0x14,0x00,0x00,0x00,
+        0x78,0x97,0x46,0x60,
+        0xC9,0x39,0x38,0xba,
+        0xf6,0x52,0xaf,0xf7,
+        0xc9,0xba,0x60,0xb0,
+        0x42,0x95,0xAA,0x7c,
+        0xC3,0x6C,0xfc,0x79
+    };
 
-    
-
-    // uint_least32_t crc_curr = Crc32(buffer_no_crc, sizeof(buffer_no_crc));
-    unsigned long crc_curr = crc32(0, buffer_no_crc, sizeof(buffer_no_crc));
-
-    cout<<std::hex<<crc_curr<<endl;
-    // for (int i = 0; i<sizeof(mass)/sizeof(uint16_t); i++)
-    // {
-    //     mass[i] = htons(mass[i]);
-    //     cout<<std::hex<<mass[i]<<endl;
-    // }
-
+    //same vithout CRC32
+    unsigned char recieve[96];
 
     size_t n = send(fd,buffer, sizeof(buffer),0);
     cout<<"n is "<<n<<endl;
 
+    // unsigned char * buffer_reverse = to_lendian(buffer_norcr, sizeof(buffer_norcr));
+    // cout<<std::hex<<crc32(0,buffer_reverse, sizeof(buffer_norcr))<<endl;
+    // cout<<std::hex<<crc32(0,buffer_norcr, sizeof(buffer_norcr))<<endl;
+
+
+
     for (int i = 0; i<sizeof(buffer) / sizeof(char); i++)
         cout<<std::hex<<(int)buffer[i]<<" ";
-  
     cout<<endl;
-    size_t l = recv(fd,buffer,sizeof(buffer),0);
+
+
+    bzero(recieve, 84);
+    size_t l = recv(fd,recieve,sizeof(recieve),0);
     cout<<l<<endl;
 
-    for (int i = 0; i<sizeof(buffer) / sizeof(char); i++)
-        cout<<std::hex<<(int)buffer[i]<<" ";
-
+    for (int i = 0; i<sizeof(recieve) / sizeof(char); i++)
+        cout<<std::hex<<(int)recieve[i]<<" ";
     cout<<endl;
    
 
