@@ -1,42 +1,26 @@
 /*
     This file is part of VK/KittenPHP-DB-Engine Library.
-
     VK/KittenPHP-DB-Engine Library is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 2 of the License, or
     (at your option) any later version.
-
     VK/KittenPHP-DB-Engine Library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
-
     You should have received a copy of the GNU Lesser General Public License
     along with VK/KittenPHP-DB-Engine Library.  If not, see <http://www.gnu.org/licenses/>.
-
     Copyright 2009-2012 Vkontakte Ltd
               2009-2012 Nikolai Durov
               2009-2012 Andrei Lopatin
-                   2012 Anton Maydell
-*/
-#include "config.h.in"
+                   2012 Anton Maydell */
 
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
 
-#ifdef HAVE_CONFIG_H
 #include "crc32.h"
-#endif
-/*
-#ifndef HAVE___BUILTIN_BSWAP32
-static inline unsigned __builtin_bswap32(unsigned x) {
-  return ((x << 24) & 0xff000000 ) |
-  ((x << 8) & 0x00ff0000 ) |
-  ((x >> 8) & 0x0000ff00 ) |
-  ((x >> 24) & 0x000000ff );
-}
-#endif*/
+//#include "server-functions.h"
 
 unsigned int crc32_table[256] =
 {
@@ -483,7 +467,6 @@ static void gf32_matrix_square (unsigned *square, unsigned *matrix) {
 }
 
 unsigned compute_crc32_combine (unsigned crc1, unsigned crc2, int len2) {
-  assert (len2 < (1 << 29));
   static int power_buf_initialized = 0;
   static unsigned power_buf[1024];
   int n;
@@ -591,6 +574,7 @@ static int find_corrupted_bit (int size, unsigned d) {
   d = revbin (d);
   int n = size << 3;
   int r = (int) (sqrt (n) + 0.5);
+  vkprintf (3, "n = %d, r = %d\n", n, r);
   struct fcb_table_entry *T = calloc (r, sizeof (struct fcb_table_entry));
   assert (T != NULL);
   T[0].i = 0;
@@ -653,13 +637,21 @@ int crc32_check_and_repair (void *input, int l, unsigned *input_crc32, int force
     return 0;
   }
   int k = find_corrupted_bit (l, crc32_diff);
+  vkprintf (3, "find_corrupted_bit returns %d.\n", k);
   int r = repair_bit (input, l, k);
+  vkprintf (3, "repair_bit returns %d.\n", r);
   if (!r) {
     assert (compute_crc32 (input, l) == *input_crc32);
+    if (force_exit) {
+      kprintf ("crc32_check_and_repair successfully repair one bit in %d bytes block.\n", l);
+    }
     return 1;
   }
   if (!(crc32_diff & (crc32_diff - 1))) { /* crc32_diff is power of 2 */
     *input_crc32 = computed_crc32;
+    if (force_exit) {
+      kprintf ("crc32_check_and_repair successfully repair one bit in crc32 (%d bytes block).\n", l);
+    }
     return 2;
   }
   assert (!force_exit);
