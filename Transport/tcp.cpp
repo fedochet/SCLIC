@@ -17,7 +17,19 @@ tcp_packet::tcp_packet(vector<unsigned char> &tl_packet)
     long crc32 = compute_crc32(&packet_data[0], packet_data.size());
 
     crc32_v = intToVector(crc32);
-    printVector(crc32_v);
+    //printVector(crc32_v);
 
     packet_data = mergeVectors(packet_data, crc32_v);
+}
+
+void tcp_packet::printPacket()
+{
+    printVector(packet_data);
+}
+
+bool tcp_packet::sendPacket(int fg)
+{
+    if (write(fg, &packet_data[0], packet_data.size()) == packet_data.size());
+        return 1;
+    return 0;
 }
