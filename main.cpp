@@ -4,6 +4,7 @@
 #include "factorisation.h"
 #include "hardcode.hpp"
 #include "crc32.h"
+#include "tcp.hpp"
 
 #include <openssl/sha.h>
 #include <openssl/rsa.h>
@@ -19,6 +20,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <openssl/bn.h>
+
 #include "ctime"
 #include <vector>
 
@@ -44,24 +47,17 @@ int connect(const char *host, int port) {
         cout << "SOCKET ERROR\n";
         if (errno != EINPROGRESS) {
             close(fd);
-            return fd;
+            return 0;
         }
         return 0;
     }
+    return fd;
 }
-
-struct pq_request
-{
-    vector<uint8_t> tcp_header_,
-                    data,
-                    rcr32;
-
-};
 
 static int fd = connect(SERVER, PORT);
 
-
 int main() {
+    cout<<"fd is "<<fd<<endl;
 
     unsigned char buffer[] = {
             0x00, 0x00, 0x00, 0x00,    //auth_key
@@ -79,10 +75,19 @@ int main() {
     vector<unsigned char> tl_packet(buffer, buffer + sizeof(buffer)/sizeof(unsigned char));
     printVector(tl_packet);
 
+    tcp_packet test(tl_packet);
     vector<unsigned char> tcp_packet;
-    makePacket(tl_packet, tcp_packet);
 
     printVector(tcp_packet);
+    test.print();
+    cout << "bytes sended:"<<test.send(fd)<<endl;
+
+    unsigned char recieve[96];
+    cout<<"bytes recieved"<<read(fd, recieve, 0x64)<<endl;
+
+    for(int i = 0; i<0x64; i++)
+        cout<<(int)recieve[i]<<" ";
+    cout<<recieve<< endl;
 
     BIGNUM * e = BN_new();
     BIGNUM * mod = BN_new();
