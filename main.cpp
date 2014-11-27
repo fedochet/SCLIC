@@ -75,19 +75,19 @@ int main() {
     vector<unsigned char> tl_packet(buffer, buffer + sizeof(buffer)/sizeof(unsigned char));
     printVector(tl_packet);
 
-    tcp_packet test(tl_packet);
-    vector<unsigned char> tcp_packet;
+    tcp_packet req_pq(tl_packet);
+    tcp_packet resPQ;
 
-    printVector(tcp_packet);
-    test.print();
-    cout << "bytes sended:"<<test.send(fd)<<endl;
+    req_pq.print();
+    cout << "bytes sended:"<<req_pq.send(fd)<<endl;
+    cout << "bytes recieved:"<<resPQ.receive(fd)<<endl;
 
-    unsigned char recieve[96];
-    cout<<"bytes recieved"<<read(fd, recieve, 0x64)<<endl;
+    resPQ.print();
 
-    for(int i = 0; i<0x64; i++)
-        cout<<(int)recieve[i]<<" ";
-    cout<<recieve<< endl;
+    cout<<"------------------resPQ is recieved!!!----------------"<<endl;
+    vector<unsigned char> int_test = intToVector(0xfffff0ff);
+    printVector(int_test);
+    cout<< vectorToInt(int_test)<<endl;
 
     BIGNUM * e = BN_new();
     BIGNUM * mod = BN_new();

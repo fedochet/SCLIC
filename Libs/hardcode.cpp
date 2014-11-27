@@ -24,7 +24,7 @@ void printVector(vector<unsigned char> &v)
 }
 
 //vector inverter
-vector<unsigned char> vectorInversion(vector<unsigned char> &v)
+vector<unsigned char> vectorInversion(vector<unsigned char> v)
 {
     vector<unsigned char> result(v.size());
 
@@ -34,9 +34,21 @@ vector<unsigned char> vectorInversion(vector<unsigned char> &v)
     return result;
 }
 
-unsigned long vectorToLong(vector<unsigned char> &v) {
+unsigned long vectorToLong(vector<unsigned char> v) {
     unsigned long result = 0;
     unsigned long mult = 0x100000000000000;
+    for(int i = 0; i<v.size(); i++)
+    {
+        result = result + (unsigned long)v[i] * mult;
+        mult = mult / 0x100;
+    }
+
+    return result;
+}
+
+unsigned int vectorToInt(vector<unsigned char> v){
+    unsigned long result = 0;
+    unsigned long mult = 0x1000000;
     for(int i = 0; i<v.size(); i++)
     {
         result = result + (unsigned long)v[i] * mult;
@@ -49,7 +61,7 @@ unsigned long vectorToLong(vector<unsigned char> &v) {
 vector<unsigned char> longToVector(long x) {
     vector<unsigned char> result(8);
 
-    for(int i = 0; i<result.size(); i++)
+    for(int i = result.size()-1; i>=0; i--)
     {
         result[i] = x % 0x100;
         x = x / 0x100;
@@ -62,7 +74,7 @@ vector<unsigned char> intToVector(unsigned int x) {
     vector<unsigned char> result(4);
 
 
-    for(int i = 0; i<result.size(); i++)
+    for(int i = result.size()-1; i>=0; i--)
     {
         result[i] = x % 0x100;
         x = x / 0x100;

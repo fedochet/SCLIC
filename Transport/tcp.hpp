@@ -10,10 +10,12 @@ using std::vector;
 
 struct tcp_packet{
     tcp_packet(vector<unsigned char> &tl_packet);
+    tcp_packet();
     void print(void);
 
     //sending package to port (port has to be initialize)
     size_t send(int fg);
+    size_t receive(int fg);
 private:
     vector<unsigned char> data;
     vector<unsigned char> size;
