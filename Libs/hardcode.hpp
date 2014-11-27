@@ -2,17 +2,28 @@
 #include <iostream>
 #include "crc32.h"
 
+#include <sstream>
+#include <ctime>
+#include <openssl/bn.h>
+#include <openssl/rand.h>
+
 #define TCP_SIZE 4
 #define TCP_PKT_NUM 4
 
 
 using namespace std;
 
+vector<unsigned char> hexStringToVector(string& str);
+vector<unsigned char> random128();
+
 unsigned char* longToChar(long int x);
 
 vector<unsigned char> longToVector(long x);
 
-void printVector(vector<unsigned char> &v);
+void printVector(vector<unsigned char> v);
+
+vector<unsigned char> getUnixTimestamp();
+vector<unsigned char> rand_128int();
 
 vector<unsigned char> vectorInversion(vector<unsigned char> v);
 

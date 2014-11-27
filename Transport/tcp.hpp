@@ -1,5 +1,6 @@
 #include <vector>
 #include "hardcode.hpp"
+#include "tl.hpp"
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -16,6 +17,9 @@ struct tcp_packet{
     //sending package to port (port has to be initialize)
     size_t send(int fg);
     size_t receive(int fg);
+
+    tl_packet create_tl();
+
 private:
     vector<unsigned char> data;
     vector<unsigned char> size;

@@ -4,11 +4,12 @@
 #include "factorisation.h"
 #include "hardcode.hpp"
 #include "crc32.h"
-#include "tcp.hpp"
 
 #include <openssl/sha.h>
 #include <openssl/rsa.h>
 
+// packages
+#include "tcp.hpp"
 
 // for connection
 #include <stdio.h>
@@ -72,22 +73,24 @@ int main() {
             0x42, 0x95, 0xAA, 0x7C
     };
 
-    vector<unsigned char> tl_packet(buffer, buffer + sizeof(buffer)/sizeof(unsigned char));
-    printVector(tl_packet);
+    vector<unsigned char> tl_vector(buffer, buffer + sizeof(buffer)/sizeof(unsigned char));
+    printVector(tl_vector);
 
-    tcp_packet req_pq(tl_packet);
-    tcp_packet resPQ;
+    tcp_packet req_pq(tl_vector);
+    tcp_packet resPQ_tcp;
 
     req_pq.print();
     cout << "bytes sended:"<<req_pq.send(fd)<<endl;
-    cout << "bytes recieved:"<<resPQ.receive(fd)<<endl;
+    cout << "bytes recieved:"<<resPQ_tcp.receive(fd)<<endl;
 
-    resPQ.print();
+    resPQ_tcp.print();
 
     cout<<"------------------resPQ is recieved!!!----------------"<<endl;
-    vector<unsigned char> int_test = intToVector(0xfffff0ff);
-    printVector(int_test);
-    cout<< vectorToInt(int_test)<<endl;
+
+    tl_packet resPQ_tl = resPQ_tcp.create_tl();
+
+    cout<<"random 128 int"<<endl;
+    printVector(random128());
 
     BIGNUM * e = BN_new();
     BIGNUM * mod = BN_new();

@@ -15,12 +15,16 @@ unsigned char* longToChar(long int x)
 }
 
 //hex print of
-void printVector(vector<unsigned char> &v)
+void printVector(vector<unsigned char> v)
 {
     for (int i=0; i<v.size(); i++)
         cout<<hex<<(int)v[i]<<" ";
 
     cout<<endl;
+}
+
+vector<unsigned char> getUnixTimestamp() {
+    return longToVector(time(0) * 0x100000000);
 }
 
 //vector inverter
@@ -120,4 +124,28 @@ void makePacket(vector<unsigned char> &tl_packet, vector<unsigned char> &result)
 }
 
 
+vector<unsigned char> hexStringToVector(string &str)
+{
+    vector<unsigned char> result;
+    unsigned int temp;
+    stringstream ss;
+    for (int i = 0; i < str.size(); i+=2)
+    {
+        ss.clear();
+        ss << hex << str.substr(i, 2);
+        ss >> temp;
+        result.push_back(static_cast<unsigned char>(temp));
+    }
 
+    return result;
+}
+
+vector<unsigned char> random128()
+{
+    BIGNUM * bn = BN_new();
+    BN_rand(bn, 128, 0x00, 0xFF);
+    string convert = BN_bn2hex(bn);
+    free(bn);
+
+    return hexStringToVector(convert);
+}
