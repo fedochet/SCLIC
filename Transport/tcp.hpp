@@ -18,7 +18,7 @@ struct tcp_packet{
     size_t send(int fg);
     size_t receive(int fg);
 
-    tl_packet create_tl();
+    vector<unsigned char> get_data();
 
 private:
     vector<unsigned char> data;

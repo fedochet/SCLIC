@@ -140,10 +140,26 @@ vector<unsigned char> hexStringToVector(string &str)
     return result;
 }
 
-vector<unsigned char> random128()
+string vectorToHexString(vector<unsigned char> vec)
+{
+    string result;
+    string temp;
+    stringstream ss;
+    for (int i = 0; i < vec.size(); i++)
+    {
+        ss.clear();
+        ss << hex << (int)vec[i];
+        ss >> temp;
+        result+=temp;
+    }
+
+    return result;
+}
+
+vector<unsigned char> generate_random(int len)
 {
     BIGNUM * bn = BN_new();
-    BN_rand(bn, 128, 0x00, 0xFF);
+    BN_rand(bn, len, 0x00, 0xFF);
     string convert = BN_bn2hex(bn);
     free(bn);
 

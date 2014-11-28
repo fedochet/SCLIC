@@ -88,8 +88,6 @@ size_t tcp_packet::receive(int fg) {
     return packages_recieved;
 }
 
-tl_packet tcp_packet::create_tl()
-{
-    return tl_packet(data);
-};
-
+vector<unsigned char> tcp_packet::get_data() {
+    return data;
+}

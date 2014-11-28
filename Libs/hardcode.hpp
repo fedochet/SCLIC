@@ -13,8 +13,9 @@
 
 using namespace std;
 
+string vectorToHexString(vector<unsigned char> vec);
 vector<unsigned char> hexStringToVector(string& str);
-vector<unsigned char> random128();
+vector<unsigned char> generate_random(int len);
 
 unsigned char* longToChar(long int x);
 
@@ -23,7 +24,6 @@ vector<unsigned char> longToVector(long x);
 void printVector(vector<unsigned char> v);
 
 vector<unsigned char> getUnixTimestamp();
-vector<unsigned char> rand_128int();
 
 vector<unsigned char> vectorInversion(vector<unsigned char> v);
 
