@@ -59,6 +59,7 @@ static int fd = connect(SERVER, PORT);
 
 int main() {
     cout<<"fd is "<<fd<<endl;
+    req_pq_packet Req_pq_packet;
 
     unsigned char buffer[] = {
             0x00, 0x00, 0x00, 0x00,    //auth_key
@@ -66,14 +67,14 @@ int main() {
             0x00, 0x00, 0x00, 0x00,    //unixstamp « 32
             0xB1, 0xCC, 0xE9, 0x51,    //unixstamp
             0x14, 0x00, 0x00, 0x00,    //длина тела сообщения
-            0x78, 0x97, 0x46, 0x60,    //req_pq
+            0x78, 0x97, 0x46, 0x60,    //req_pq_packet
             0xC9, 0x39, 0x38, 0xBA,    //nonce
             0xF6, 0x52, 0xAF, 0xF7,    //nonce
             0xC9, 0xBA, 0x60, 0xB0,    //nonce
             0x42, 0x95, 0xAA, 0x7C
     };
 
-    vector<unsigned char> tl_vector(buffer, buffer + sizeof(buffer)/sizeof(unsigned char));
+    vector<unsigned char> tl_vector  = Req_pq_packet.to_vector();
     printVector(tl_vector);
 
     tcp_packet req_pq(tl_vector);

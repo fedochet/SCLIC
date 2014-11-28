@@ -48,3 +48,31 @@ tl_packet::tl_packet(vector<unsigned char> v) {
     data = vector<unsigned char> (&v[read_position], &v[read_position + data.size()]);
     printVector(data);
 }
+
+req_pq_packet::req_pq_packet() {
+
+    auth_id = vector<unsigned char> (8, 0);
+    printVector(auth_id);
+
+    timestamp = vectorInversion(getUnixTimestamp());
+    printVector(timestamp);
+
+    length = vectorInversion(intToVector(20));
+    printVector(length);
+
+    msg_id = vectorInversion(intToVector(0x60469778));
+    printVector(msg_id);
+
+    data = random128();
+    printVector(data);
+}
+
+vector<unsigned char> tl_packet::to_vector() {
+    vector<unsigned char> result;
+    result = mergeVectors(auth_id, timestamp);
+    result = mergeVectors(result, length);
+    result = mergeVectors(result, msg_id);
+    result = mergeVectors(result, data);
+
+    return result;
+}

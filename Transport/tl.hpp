@@ -7,10 +7,17 @@ struct tl_packet
     vector<unsigned char> timestamp;
 
     vector<unsigned char> length;
-    vector<unsigned char> msg_id;   // as example 60 46 97 78 is req_pq
+    vector<unsigned char> msg_id;   // as example 60 46 97 78 is req_pq_packet
 
     vector<unsigned char> data;     //real data
 
     tl_packet();
     tl_packet(vector<unsigned char> v); //taking package from string
+
+    vector<unsigned char> to_vector();
+};
+
+struct req_pq_packet :tl_packet
+{
+    req_pq_packet();
 };
