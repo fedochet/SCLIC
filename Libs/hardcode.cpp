@@ -17,8 +17,16 @@ unsigned char* longToChar(long int x)
 //hex print of
 void printVector(vector<unsigned char> v)
 {
-    for (int i=0; i<v.size(); i++)
-        cout<<hex<<(int)v[i]<<" ";
+    for (int i=0; i<v.size(); i++) {
+
+        if (i % 0x10 == 0)
+            cout<<endl;
+
+        if ((int) v[i] / 0x10 == 0)
+            cout<<"0";
+
+        cout << hex << (int) v[i]<<" ";
+    }
 
     cout<<endl;
 }

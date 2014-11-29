@@ -1,7 +1,7 @@
 #include "tcp.hpp"
 
 tcp_packet::tcp_packet(){};
-tcp_packet::tcp_packet(vector<unsigned char> &tl_packet)
+tcp_packet::tcp_packet(vector<unsigned char> &tl_packet, int packet_num)
 {
     data = tl_packet;
     size.clear();
@@ -10,6 +10,7 @@ tcp_packet::tcp_packet(vector<unsigned char> &tl_packet)
 
     size.resize(TCP_SIZE);
     num.resize(TCP_PKT_NUM);
+    num = vectorInversion(intToVector(packet_num));
     crc32.resize(CRC_SIZE);
 
     size = intToVector(TCP_SIZE + TCP_PKT_NUM+tl_packet.size()+ CRC_SIZE);

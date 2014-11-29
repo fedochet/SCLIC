@@ -64,7 +64,7 @@ int main() {
     vector<unsigned char> tl_vector  = Req_pq_packet.to_vector();
     printVector(tl_vector);
 
-    tcp_packet req_pq(tl_vector);
+    tcp_packet req_pq(tl_vector, 0);
     tcp_packet resPQ_tcp;
 
     req_pq.print();
@@ -85,6 +85,9 @@ int main() {
     cout<<"------------------resPQ is decomposed!!!----------------"<<endl;
 
     p_q_inner_data_packet p_q_inner_data_packet1(resPQ_tl.get_nonce(),resPQ_tl.get_server_nonce(), resPQ_tl.get_pq(), p, resPQ_tl.get_pq()/p);
+
+    cout<<"------------------pq_inner is done!!!-------------------"<<endl;
+
     req_DH_params_packet req_dh_params_packet(
             resPQ_tl.get_nonce(),
             resPQ_tl.get_server_nonce(),
@@ -92,9 +95,13 @@ int main() {
             p_q_inner_data_packet1.get_encrypted_data(),
             p, resPQ_tl.get_pq()/p);
 
+    cout<<"------------------req_DH is done!!!-------------------"<<endl;
+
     vector<unsigned char> req_dh_v = req_dh_params_packet.to_vector();
     printVector(req_dh_v);
-    tcp_packet req_DH(req_dh_v);
+    tcp_packet req_DH(req_dh_v, 1);
+    cout<<"------------------req_DH with TCP is-------------------"<<endl;
+    req_DH.print();
     cout<<dec<<req_DH.send(fd)<<endl;
 
     tcp_packet res_DH;

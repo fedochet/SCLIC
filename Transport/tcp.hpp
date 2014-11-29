@@ -10,7 +10,7 @@
 using std::vector;
 
 struct tcp_packet{
-    tcp_packet(vector<unsigned char> &tl_packet);
+    tcp_packet(vector<unsigned char> &tl_packet, int packet_num);
     tcp_packet();
     void print(void);
 

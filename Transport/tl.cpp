@@ -75,6 +75,7 @@ vector<unsigned char> tl_packet::to_vector() {
     result = mergeVectors(result, length);
     result = mergeVectors(result, msg_id);
     result = mergeVectors(result, data);
+    cout<<"data is "<<endl;
 
     return result;
 }
@@ -172,30 +173,35 @@ req_DH_params_packet::req_DH_params_packet(
         long p_param,
         long q_param)
 {
-    p = longToVector(p_param);
-    q = longToVector(q_param);
+    p = intToVector(p_param);
+    q = intToVector(q_param);
 
     auth_id = vector<unsigned char> (8, 0);
-    data = auth_id;
     printVector(auth_id);
 
     timestamp = vectorInversion(getUnixTimestamp());
-    data = mergeVectors(data, timestamp);
     printVector(timestamp);
 
     length = vectorInversion(intToVector(320));
-    data = mergeVectors(data, length);
     printVector(length);
 
     msg_id = vectorInversion(intToVector(0xd712e4be));
-    data = mergeVectors(data,msg_id);
     printVector(msg_id);
 
+    cout<<"nonce is:"<<endl;
     nonce = nonce_param;
-    data = mergeVectors(data, nonce);
+    data = nonce;
+    printVector(nonce);
 
+    cout<<endl<<"data now is:"<<endl;
+    printVector(data);
+
+
+    cout<<"server_nonce is:"<<endl;
     server_nonce = server_nonce_param;
     data = mergeVectors(data, server_nonce);
+    printVector(server_nonce);
+
 
     // p and q inserting with padding
     data.push_back(0x04);
@@ -218,7 +224,7 @@ req_DH_params_packet::req_DH_params_packet(
     data.push_back(0x00);
     data.push_back(0x01);
     data.push_back(0x00);
-//    data.push_back(0x0);
+    //data.push_back(0x0);
     encrypted_data = encrypted_data_param;
     data = mergeVectors(data, encrypted_data);
 }
@@ -238,8 +244,8 @@ p_q_inner_data_packet::p_q_inner_data_packet(
     nonce = nonce_param;
     server_nonce = server_nonce_param;
     pq = longToVector(pq_param);
-    p = longToVector(p_param);
-    q = longToVector(q_param);
+    p = intToVector(p_param);
+    q = intToVector(q_param);
     new_nonce = generate_random(256);
 
     data = msg_id;
@@ -287,8 +293,16 @@ p_q_inner_data_packet::p_q_inner_data_packet(
     string res = BN_bn2hex(result);
     encrypted_data = hexStringToVector(res);
     cout <<data_with_hash.size()<<"   "<<encrypted_data.size() << endl;
+    cout<<"DATA WITH HASH"<<endl;
     printVector(data_with_hash);
+    cout<<"////DATA WITH HASH"<<endl<<endl;
+
+    cout<<"ENCRYPTED DATA"<<endl;
+
     printVector(encrypted_data);
+    cout<<"////ENCRYPTED DATA"<<endl;
+
+
 }
 
 vector<unsigned char> p_q_inner_data_packet::get_encrypted_data() {
