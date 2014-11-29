@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8.4)
+SET(CMAKE_CXX_FLAGS "-std=c++0x")
 project(request_types)
 
 find_package(OpenSSL REQUIRED)

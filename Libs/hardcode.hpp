@@ -6,6 +6,7 @@
 #include <ctime>
 #include <openssl/bn.h>
 #include <openssl/rand.h>
+#include <sys/time.h>
 
 #define TCP_SIZE 4
 #define TCP_PKT_NUM 4

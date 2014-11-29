@@ -28,7 +28,7 @@
 
 // ports
 #define SERVER "149.154.167.40" // telegram test-server ip
-#define PORT 443 // port
+#define PORT 80 // port
 
 using namespace std;
 
@@ -55,7 +55,7 @@ int connect(const char *host, int port) {
     return fd;
 }
 
-static int fd = connect(SERVER, PORT);
+int fd = connect(SERVER, PORT);
 
 int main() {
     cout<<"fd is "<<fd<<endl;
@@ -64,7 +64,7 @@ int main() {
     vector<unsigned char> tl_vector  = Req_pq_packet.to_vector();
     printVector(tl_vector);
 
-    tcp_packet req_pq(tl_vector, 0);
+    tcp_packet req_pq(tl_vector, 0x0);
     tcp_packet resPQ_tcp;
 
     req_pq.print();
@@ -76,13 +76,15 @@ int main() {
     cout<<"------------------resPQ is recieved!!!----------------"<<endl;
 
     res_pq_packet resPQ_tl(resPQ_tcp.get_data());
-    cout<<dec<<"pq is "<<resPQ_tl.get_pq()<<endl;
+    cout<<"pq is "<<resPQ_tl.get_pq()<<endl;
 
     long int p = factorize(resPQ_tl.get_pq());
 
     cout<<hex<<"p and q is "<< p << " and " << resPQ_tl.get_pq()/p <<endl;
 
     cout<<"------------------resPQ is decomposed!!!----------------"<<endl;
+
+    sleep(2);
 
     p_q_inner_data_packet p_q_inner_data_packet1(resPQ_tl.get_nonce(),resPQ_tl.get_server_nonce(), resPQ_tl.get_pq(), p, resPQ_tl.get_pq()/p);
 
@@ -99,9 +101,10 @@ int main() {
 
     vector<unsigned char> req_dh_v = req_dh_params_packet.to_vector();
     printVector(req_dh_v);
-    tcp_packet req_DH(req_dh_v, 1);
+    tcp_packet req_DH(req_dh_v, 0x01);
     cout<<"------------------req_DH with TCP is-------------------"<<endl;
     req_DH.print();
+
     cout<<dec<<req_DH.send(fd)<<endl;
 
     tcp_packet res_DH;

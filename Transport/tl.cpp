@@ -268,13 +268,13 @@ p_q_inner_data_packet::p_q_inner_data_packet(
     data.push_back(0x0);
     data.push_back(0x0);
 
-
     data = mergeVectors(data, nonce);
     data = mergeVectors(data, server_nonce);
     data = mergeVectors(data, new_nonce);
 
     vector<unsigned char> hash(20,0);
     SHA1(&data[0], data.size(), &hash[0]);
+    printVector(hash);
 
     data_with_hash = mergeVectors(hash, data);
     vector<unsigned char> rand_padding (data_with_hash_size - data_with_hash.size(), 0x0);

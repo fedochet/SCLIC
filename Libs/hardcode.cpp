@@ -32,7 +32,13 @@ void printVector(vector<unsigned char> v)
 }
 
 vector<unsigned char> getUnixTimestamp() {
-    return longToVector(time(0) * 0x100000000);
+
+    timeval t;
+    gettimeofday(&t, 0);
+    cout<<t.tv_sec * 0x100000000 + t.tv_usec * 0x100<<endl;
+
+    return longToVector(t.tv_sec * 0x100000000 + t.tv_usec * 0x1000);
+    cout<<time(0)<<endl;
 }
 
 //vector inverter
