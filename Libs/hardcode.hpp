@@ -6,6 +6,7 @@
 #include <ctime>
 #include <openssl/bn.h>
 #include <openssl/rand.h>
+#include <openssl/sha.h>
 #include <sys/time.h>
 
 #define TCP_SIZE 4
@@ -35,7 +36,11 @@ unsigned int vectorToInt(vector<unsigned char> v);
 vector<unsigned char> longToVector(unsigned long x);
 vector<unsigned char> intToVector(unsigned int x);
 
-vector<unsigned char> mergeVectors(vector<unsigned char> &first, vector<unsigned char> &second);
+vector<unsigned char> mergeVectors(vector<unsigned char> first, vector<unsigned char> second);
 
 //TCP-packing
 void makePacket(vector<unsigned char> &tl_packet, vector<unsigned char> &result);
+
+vector<unsigned char> substring(vector<unsigned char>, int, int);
+
+vector<unsigned char> SHA1V(vector<unsigned char>, vector<unsigned char>);
