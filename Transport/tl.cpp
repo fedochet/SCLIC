@@ -335,6 +335,8 @@ server_DH_params_packet::server_DH_params_packet(vector<unsigned char> v) {
 
     read_position += msg_id.size();
 
+    read_position += 16;   // nonce
+    read_position += 16; // server nonce
     read_position += 4; //length of length of encrypted answer
 
     encrypted_data = vector <unsigned char> (&v[read_position], &v[read_position + encrypted_data_size]);
