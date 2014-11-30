@@ -109,6 +109,8 @@ int main() {
     cout<<"bytes recieved"<<endl;
     cout<<res_DH.receive(fd)<<endl;
 
+    server_DH_params_packet server_dh_params_packet(res_DH.get_data());
+
 
 //    cout<<"random 128 int"<<endl;
 //    printVector(generate_random());

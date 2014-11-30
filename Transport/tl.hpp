@@ -125,3 +125,17 @@ struct req_DH_params_packet:tl_packet {
             long p_param,
             long q_param);
 };
+
+struct server_DH_params_packet:tl_packet
+{
+    vector<unsigned char> nonce;
+    static const int nonce_size = 16;
+
+    vector<unsigned char> server_nonce;
+    static const int server_nonce_size = 16;
+
+    vector<unsigned char> encrypted_data;
+    static const int encrypted_data_size = 594;
+
+    server_DH_params_packet(vector<unsigned char> v);
+};
