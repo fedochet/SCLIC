@@ -162,7 +162,10 @@ string vectorToHexString(vector<unsigned char> vec)
     for (int i = 0; i < vec.size(); i++)
     {
         ss.clear();
+        if ((int)vec[i]/0x10 == 0)
+            ss << "0";
         ss << hex << (int)vec[i];
+
         ss >> temp;
         result+=temp;
     }

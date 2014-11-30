@@ -10,7 +10,6 @@ tl_packet::tl_packet(vector<unsigned char> v) {
     auth_id.resize(8);
 
     auth_id = vector<unsigned char> (&v[read_position], &v[read_position + auth_id.size()]);
-    printVector(auth_id);
 
     read_position += auth_id.size();
 
@@ -18,10 +17,7 @@ tl_packet::tl_packet(vector<unsigned char> v) {
     timestamp.resize(8);
 
     timestamp = vector<unsigned char> (&v[read_position], &v[read_position + timestamp.size()]);
-    printVector(timestamp);
-    cout<<dec<<"exact unixtime on server is "<<vectorToLong(vectorInversion(timestamp))/0x100000000<<endl;
     vector<unsigned char> time_v = getUnixTimestamp();
-    printVector(time_v);
 
     read_position += timestamp.size();
 
@@ -29,7 +25,6 @@ tl_packet::tl_packet(vector<unsigned char> v) {
     length.resize(4);
 
     length = vector<unsigned char> (&v[read_position], &v[read_position + length.size()]);
-    printVector(length);
 
     read_position += length.size();
     int data_size = vectorToInt(vectorInversion(length)) - 4; // because of msg id
@@ -38,7 +33,6 @@ tl_packet::tl_packet(vector<unsigned char> v) {
     msg_id.resize(4);
 
     msg_id = vector <unsigned char> (&v[read_position], &v[read_position + msg_id.size()]);
-    printVector(msg_id);
 
     read_position += msg_id.size();
 
@@ -46,25 +40,19 @@ tl_packet::tl_packet(vector<unsigned char> v) {
     data.resize(data_size);
 
     data = vector<unsigned char> (&v[read_position], &v[read_position + data.size()]);
-    printVector(data);
 }
 
 req_pq_packet::req_pq_packet() {
 
     auth_id = vector<unsigned char> (8, 0);
-    printVector(auth_id);
 
     timestamp = vectorInversion(getUnixTimestamp());
-    printVector(timestamp);
 
     length = vectorInversion(intToVector(20));
-    printVector(length);
 
     msg_id = vectorInversion(intToVector(0x60469778));
-    printVector(msg_id);
 
     nonce = generate_random(128);
-    printVector(nonce);
 
     data = nonce;
 }
@@ -75,7 +63,6 @@ vector<unsigned char> tl_packet::to_vector() {
     result = mergeVectors(result, length);
     result = mergeVectors(result, msg_id);
     result = mergeVectors(result, data);
-    cout<<"data is "<<endl;
 
     return result;
 }
@@ -95,10 +82,7 @@ res_pq_packet::res_pq_packet(vector<unsigned char> v) {
     timestamp.resize(8);
 
     timestamp = vector<unsigned char> (&v[read_position], &v[read_position + timestamp.size()]);
-    printVector(timestamp);
-    cout<<dec<<"exact unixtime on server is "<<vectorToLong(vectorInversion(timestamp))/0x100000000<<endl;
     vector<unsigned char> time_v = getUnixTimestamp();
-    printVector(time_v);
 
     read_position += timestamp.size();
 
@@ -286,8 +270,9 @@ p_q_inner_data_packet::p_q_inner_data_packet(
     BIGNUM * result = BN_new();
     BIGNUM * e = BN_new();
     BIGNUM * mod = BN_new();
+
     BN_hex2bn(&mod, MODULUS);
-    BN_hex2bn(&e, EXPONENT);
+    BN_hex2bn(&e,EXPONENT);
 
     BN_mod_exp(result, a, e, mod, BN_CTX_new());
     string res = BN_bn2hex(result);

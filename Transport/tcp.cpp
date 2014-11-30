@@ -13,7 +13,7 @@ tcp_packet::tcp_packet(vector<unsigned char> &tl_packet, int packet_num)
     num = vectorInversion(intToVector(packet_num));
     crc32.resize(CRC_SIZE);
 
-    size = intToVector(TCP_SIZE + TCP_PKT_NUM+tl_packet.size()+ CRC_SIZE);
+    size = intToVector(TCP_SIZE + TCP_PKT_NUM + tl_packet.size() + CRC_SIZE);
     size = vectorInversion(size);
 
     vector<unsigned char> to_compute_crc = size;

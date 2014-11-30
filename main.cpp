@@ -84,8 +84,6 @@ int main() {
 
     cout<<"------------------resPQ is decomposed!!!----------------"<<endl;
 
-    sleep(2);
-
     p_q_inner_data_packet p_q_inner_data_packet1(resPQ_tl.get_nonce(),resPQ_tl.get_server_nonce(), resPQ_tl.get_pq(), p, resPQ_tl.get_pq()/p);
 
     cout<<"------------------pq_inner is done!!!-------------------"<<endl;
@@ -108,6 +106,7 @@ int main() {
     cout<<dec<<req_DH.send(fd)<<endl;
 
     tcp_packet res_DH;
+    cout<<"bytes recieved"<<endl;
     cout<<res_DH.receive(fd)<<endl;
 
 
